@@ -8,7 +8,35 @@
     tools:context=".MainActivity">
 
     <ru.ecostudiovl.pointsview.PointsView
+        android:id="@+id/myPointsView"
         android:layout_height="match_parent"
-        android:layout_width="match_parent"/>
+        android:layout_width="match_parent"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/btnRedraw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Redraw" />
+
+    <CheckBox
+        android:id="@+id/cbStroke"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Рисовать внешний контур" />
+
+    <CheckBox
+        android:visibility="gone"
+        android:id="@+id/cbInternalNetworks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Рисовать внутренние связи" />
+
+    <CheckBox
+        android:visibility="gone"
+        android:id="@+id/checkBox3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CheckBox" />
 
 </LinearLayout>

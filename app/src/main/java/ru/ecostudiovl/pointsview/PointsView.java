@@ -13,36 +13,102 @@ import java.util.Random;
 
 public class PointsView extends View {
 
+    private boolean isDrawStroke;
+    private boolean isDrawInternalNetworks;
+
     public PointsView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        isDrawStroke = false;
+        isDrawInternalNetworks = false;
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
 
-        Paint p = new Paint();
+        final Paint p = new Paint();
         p.setColor(Color.RED);
+
+
         canvas.drawLine(0, canvas.getHeight()/2, canvas.getWidth(), canvas.getHeight()/2, p);
         canvas.drawLine(canvas.getWidth() / 2, 0, canvas.getWidth() / 2, canvas.getHeight(), p);
 
-        Point point = new Point(canvas.getWidth() / 2, canvas.getHeight() / 2);
+
+
+        final Point firstPoint = new Point(canvas.getWidth() / 2, canvas.getHeight() / 2);
 
         p.setColor(Color.BLACK);
-        point.isFirstPoint = true;
+        firstPoint.setFirstPoint(true);
 
         float x = 0;
         float y = 0;
 
-        for (int i = 0; i < 16; i++) {
-//            x = new Random().nextInt(canvas.getWidth() / 2) * (new Random().nextBoolean() ? 1 : -1);
-//            y = new Random().nextInt(canvas.getHeight() / 2) * (new Random().nextBoolean() ? 1 : -1);
-
-            x = (point.x + (new Random().nextInt(300) * (new Random().nextBoolean() ? 1 : -1)));
-            y = (point.y + (new Random().nextInt(300)* (new Random().nextBoolean() ? 1 : -1)));
-            point.addPoint(new Point(x, y), canvas, p);
-
+        for (int i = 0; i < 4; i++) {
+            x = (firstPoint.getX() + (new Random().nextInt(300) * (new Random().nextBoolean() ? 1 : -1)));
+            y = (firstPoint.getY() + (new Random().nextInt(300)* (new Random().nextBoolean() ? 1 : -1)));
+            firstPoint.addPoint(new Point(x, y));
         }
 
+
+        firstPoint.readPoints(new Point.PointsReader() {
+            Point lastPoint = firstPoint;
+            int items = 0;
+            @Override
+            public void onPointReaded(Point point) {
+
+                p.setColor(Color.BLACK);
+                canvas.drawCircle(point.getX(), point.getY(), 3, p);
+
+                if (isDrawStroke){
+
+                    items++;
+
+                    if (point.getParentPoint() != null){
+
+
+                        p.setColor(Color.BLUE);
+                        canvas.drawLine(lastPoint.getX(),
+                                lastPoint.getY(),
+                                point.getX(),
+                                point.getY(),
+                                p);
+
+                        lastPoint = point;
+
+                        if (items == firstPoint.size()){
+
+                            canvas.drawLine(lastPoint.getX(),
+                                    lastPoint.getY(),
+                                    firstPoint.getX(),
+                                    firstPoint.getY(),
+                                    p);
+
+                        }
+
+
+                    }
+                }
+
+
+            }
+        });
+
+    }
+
+
+    public boolean isDrawStroke() {
+        return isDrawStroke;
+    }
+
+    public void setDrawStroke(boolean drawStroke) {
+        isDrawStroke = drawStroke;
+    }
+
+    public boolean isDrawInternalNetworks() {
+        return isDrawInternalNetworks;
+    }
+
+    public void setDrawInternalNetworks(boolean drawInternalNetworks) {
+        isDrawInternalNetworks = drawInternalNetworks;
     }
 }
